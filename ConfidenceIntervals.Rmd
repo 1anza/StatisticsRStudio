@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 12"
-author: "Lane Zaugg"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   pdf_document:
@@ -8,8 +6,6 @@ output:
   html_document:
     toc: yes
 ---
-
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
 
 ## Problem 1 (Verzani problem 8.7)
 *Of the last ten times you've dropped your toast, it landed sticky-side down nine times. If these are a random sample from the $\text{Ber}(p)$ distribution, find an 80% confidence interval for $p$, the probability of the stidy side landing down. (Use `binconf()` (**Hmisc**) to compute the score interval.)*
