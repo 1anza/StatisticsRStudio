@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 6"
-author: "Lane Zaugg"
 date: "October 6, 2021"
 output:
   pdf_document:
