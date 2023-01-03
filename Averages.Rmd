@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 7"
-author: "Lane Zaugg"
 date: "October 20, 2021"
 output:
   pdf_document:
@@ -9,7 +7,6 @@ output:
     toc: yes
 ---
 
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
 
 ## Problem 1 (Verzani problem 5.6)
 *For the `batting` (**UsingR**) data set, make parallel boxplots of the batting average (`H/AB`) for each team. Which team had the greatest median average? (Use **lattice** functions for this problem.)*
