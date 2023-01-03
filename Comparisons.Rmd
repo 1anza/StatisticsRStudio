@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 8"
-author: "Lane Zaugg"
 date: "October 21, 2021"
 output:
   pdf_document:
@@ -8,8 +6,6 @@ output:
   html_document:
     toc: yes
 ---
-
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
 
 ## Problem 1 (Verzani problem 3.2)
 *For the `michelson` (**MASS**) data set, produce a density plot comparing `Speed` between Experiments 1 and 2.*
