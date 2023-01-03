@@ -1,0 +1,161 @@
+---
+title: "MATH 3080 Lab Project 3"
+author: "Your Name Here"
+date: "02/02/2022"
+output:
+  pdf_document:
+    toc: TRUE
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(GGally)
+library(OOmisc)
+library(MASS)
+library(UsingR)
+library(ggpubr)
+library(rstatix)
+```
+
+# Problem 1 (Verzani problem 12.2)
+
+*For the data set `Cars93` (**MASS**) perform a one-way analysis of variance of
+`MPG.highway` for each level of `DriveTrain`. Does the data support the null
+hypothesis of equal population means? (Use `aov()` for this problem.)*
+
+```{r, error = TRUE}
+#Take a quick look at data (Looks like we'll need to check assumptions)
+boxplot(MPG.highway ~ DriveTrain, data = Cars93)
+
+# Check assumption of normality (Shapiro's test states this isn't 
+# normally distributed, but I'm assuming you want me to 
+# move on anyway??)
+model <- lm(MPG.highway ~ DriveTrain, data = Cars93)
+ggqqplot(residuals(model))
+shapiro_test(residuals(model))
+
+# Check homogeneity of variances (pvalue is barely above an alpha 
+# of 5%, so we can continue, though arguably with scrutiny (also, 
+# still not normally distributed))
+levene_test(MPG.highway ~ DriveTrain, data = Cars93)
+
+# Perform ANOVA test (pvalue is quite low here, best to reject the null 
+# (I'd assume anyway, tough to say with the outliers since not normally
+# distributed))
+res <- aov(MPG.highway ~ DriveTrain, data = Cars93)
+summary(res)
+```
+
+# Problem 2 (Verzani problem 12.4)
+
+*The data set `carsafety` (**UsingR**) contains car-crash data. For several
+makes of cars the number of drivers killed per million is recorded in
+`Drivers.deaths`. The number of drivers of other cars killed in accidents with
+these cars, per million, is recorded in `Other.deaths`. The variable `type` is a
+factor indicating the type of car.*
+
+*Perform a one-way analysis of variance of the model `Drivers.deaths ~ type`. Is
+there a difference in population means? Did you assume equal variances? Normally
+distributed populations?*
+
+*Repeat with an analysis of variance of the model `Other.deaths ~ type`. Is
+there a difference in population means? (Use `oneway.test()` for this problem.)*
+
+```{r, error = TRUE}
+#Check assumption of normality for driver deaths (pass)
+model2 <- lm(Driver.deaths ~ type, data = carsafety)
+ggqqplot(residuals(model2))
+shapiro_test(residuals(model2))
+
+#Check homogeneity of variances for driver deaths (pass)
+levene_test(Driver.deaths ~ type, data = carsafety)
+
+#Perform ANOVA test (support null hypothesis)
+oneway.test(Driver.deaths ~ type, data = carsafety)
+
+
+
+#Check assumption of normality for other deaths (pass)
+model3 <- lm(Other.deaths ~ type, data = carsafety)
+ggqqplot(residuals(model3))
+shapiro_test(residuals(model3))
+
+#Check homogeneity of variances for other deaths (pass)
+levene_test(Other.deaths ~ type, data = carsafety)
+
+#Perform ANOVA test (support null hypothesis)
+oneway.test(Other.deaths ~ type, data = carsafety)
+
+
+
+```
+
+# Problem 3 (Verzani problem 12.7)
+
+*A manufacturer of point-of-sale merchandise tests three types of ENTER-button
+markings. They wish to minimize wear, as customers get annoyed when the markings
+on this button wear off. They construct a test of the three types, and conduct
+several trials for each. The results, in unspecified units, are recorded in the
+following table:*
+
+|        |     |     |     |     |     |     |
+|--------|-----|-----|-----|-----|-----|-----|
+| Type 1 | 303 | 293 | 296 | 299 | 298 |     |
+| Type 2 | 322 | 326 | 315 | 318 | 320 | 320 |
+| Type 3 | 309 | 327 | 317 | 315 |     |     |
+
+*Is there a difference in wear time among the three types? Answer this using a 
+one-way ANOVA.*
+
+```{r, error = TRUE}
+# Your code here
+buttonType <- c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
+                2, 3, 3, 3, 3)
+wear <- c(303, 293, 296, 299, 298, 322, 326,
+          315, 318, 320, 320, 309, 327, 317,
+          315)
+
+df <- data.frame(buttonType, wear)
+
+
+# Check assumption of normality (pvalue is not greater than 5 
+# - will not pass)
+model4 <- lm(buttonType ~ wear, data = df)
+ggqqplot(residuals(model4))
+shapiro_test(residuals(model4))
+
+# Dataset is also too small for a oneway.test
+```
+
+# Problem 4 (Verzani problem 12.13)
+
+*For the data in Problem 2, perform the one-way ANOVA using `lm()`. Compare to
+the results of `oneway.test()`.*
+
+```{r, error = TRUE}
+#Really interesting results from linear model tests 
+# - they return pvalues far lower than oneway.test results
+
+#Perform Linear Model test
+summary(lm(Driver.deaths ~ type, data = carsafety))
+
+#Perform Linear Model test
+summary(lm(Other.deaths ~ type, data = carsafety))
+```
+
+# Problem 5 (Verzani problem 12.19)
+
+*The `InsectSprays` data set contains a variable `count`, which counts the
+number of insects and a factor `spray`, which indicates the treatment given.*
+
+*First perform an analysis of variance to see whether the treatments make a
+difference. If so, perform the Tukey HSD procedure to see which pairwise
+treatments differ.*
+
+```{r, error = TRUE}
+res2 <- aov(count ~ spray, data = InsectSprays)
+summary(res2)
+
+plot(TukeyHSD(res2))
+```
+

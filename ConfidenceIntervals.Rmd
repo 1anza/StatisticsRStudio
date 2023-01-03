@@ -1,0 +1,84 @@
+---
+title: "MATH 3070 Lab Project 12"
+author: "Lane Zaugg"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+
+*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
+
+## Problem 1 (Verzani problem 8.7)
+*Of the last ten times you've dropped your toast, it landed sticky-side down nine times. If these are a random sample from the $\text{Ber}(p)$ distribution, find an 80% confidence interval for $p$, the probability of the stidy side landing down. (Use `binconf()` (**Hmisc**) to compute the score interval.)*
+
+```{r, tidy = TRUE}
+# Load library
+library(Hmisc)
+
+# Use binconf to solve at 80% confidence interval
+binconf(9, 10, alpha = .2, method = "all")
+```
+
+## Problem 2 (Verzani problem 8.10)
+*A survey is taken of 250 students, and a $\hat{p}$ of 0.45 is found. The same survey is repeated with 1000 students, and the same $\hat{p}$ is found. Compare the two 95% confidence intervals. What is the relationship? Is the margin of error for the second one four times smaller? If not, how much smaller is it? (Use `binom.test()` to answer this problem.)*
+
+```{r, tidy = TRUE}
+# Calculate binomial test for 250 students, p(hat) = .45, where x = 250*p
+# Not quite exact, as binom won't allow me to enter a "half person" of 112.5, so I rounded x to 113.
+binom.test(113, 250, p = .45, conf.level = .95)
+
+# Calculate binomial test for 1000 students, p(hat) = .45, where x = 1000*p = 450
+binom.test(450, 1000, p = .45, conf.level = .95)
+
+## Confidence intervals overlap, no significant difference
+
+## the Margin of error difference shows that it is twice ## as small, not four times.
+moe1 <- 1.96 * sqrt(.45*(1-.45)) / sqrt(250)
+moe2 <- 1.96 * sqrt(.45*(1-.45)) / sqrt(1000)
+moe1
+moe2
+moe1 - moe2
+```
+
+## Problem 3 (Verzani problem 8.15)
+*The `stud.recs` (**UsingR**) data set contains a sample of math SAT scores from some population in the variable `sat.m`. Find a 90% confidence interval for the mean math SAT score for this data. (Do not use `t.test(); find this confidence interval "by hand".)*
+
+```{r, tidy = TRUE}
+# import
+library(UsingR)
+
+# Assign data to variable
+var <- stud.recs$sat.m
+
+#Find upper and lower limits
+upper <- mean(var) + 1.65 * (sd(var)/sqrt(length(var)))
+lower <- mean(var) - 1.65 * (sd(var)/sqrt(length(var)))
+
+# print interval
+upper
+lower
+
+```
+
+## Problem 4 (Verzani problem 8.15)
+*For the `homedata` (**UsingR**) data set find 90% confidence intervals for both variables `y1970` and `y2000`, assuming the sample represents some population. Perform one sample t-test for each variable, use `t.test()`, but first discuss whether the model assumptions are appropriate (include some check of the assumptions, like a Q-Q plot).*
+
+```{r, tidy = TRUE}
+# Create local variables of data
+y1970 <- homedata$y1970
+y2000 <- homedata$y2000
+
+# Check assumptions of 1970 and 2000
+qqnorm(y1970)
+qqline(y1970)
+
+qqnorm(y2000)
+qqline(y2000)
+
+# Find 90% confidence intervals for each
+t.test(y1970, conf.level = .90)
+t.test(y2000, conf.level = .90)
+```

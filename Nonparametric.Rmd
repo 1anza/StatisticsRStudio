@@ -1,0 +1,117 @@
+---
+title: "MATH 3080 Lab Project 10"
+author: "Lane Zaugg"
+date: "04/06/2022"
+output:
+  pdf_document:
+    toc: TRUE
+---
+
+
+
+```{r, include = FALSE}
+library(BSDA)
+library(tidyverse)
+library(GGally)
+library(OOmisc)
+library(MASS)
+library(UsingR)
+library(ggpubr)
+library(rstatix)
+library(tolerance)
+```
+
+# Problem 1 (Verzani problem 9.17)
+
+*The `exec.pay` (**UsingR**) data set contains data on the salaries of CEOs at
+199 top companies in the United States. The amounts are in \$10,000s. The data
+is not symmetric. Do a sign test to determine whether the median pay is more
+than \$220,000.*
+
+```{r, error = TRUE}
+
+SIGN.test(x = exec.pay, md = 22, alternative = "greater")
+
+```
+**Reject the null, median pay is likely more than $220k**
+
+# Problem 2 (Verzani problem 9.18)
+
+*Repeat the previous exercise, using the signed-rank test on the log-transformed
+data. Do you reach the same conclusion?*
+
+```{r, error = TRUE}
+
+logPay <- log10(exec.pay)
+
+plot(density(logPay))
+wilcox.test(logPay, mu = 22)
+
+```
+**From what I can tell, yes**
+
+# Problem 3 (Verzani problem 9.20)
+
+*If the sign test has fewer assumptions on the population, why wouldn't we
+always use that instead of a $t$-test? The answer lies in the power of the sign
+test to detect when the null hypothesis is false. The sign test will not reject
+a false null as often as the $t$-test. The following commands will perform a
+simulation comparing the two tests on data that has a $N(1, 2)$ distribution.
+The significance tests performed are both*
+
+$$H_0: \mu = 0$$
+
+$$H_A: \mu > 0.$$
+
+*Run the simulation. Is there a big difference between the two tests?*
+
+```{r}
+m <- 200; n <- 10
+
+out <- replicate(m, {
+  x <- rnorm(n, mean = 1, sd = 2)
+  ttest <- t.test(x, mu = 0, alt = "greater")$p.value
+  sgntest <- 1 - pbinom(sum(x > 0) - 1, n, 1/2)
+  c(t.test = ifelse(ttest < 0.05, 1, 0),
+    sign.test = ifelse(sgntest < 0.05, 1, 0))
+})
+
+res.t <- out["t.test",]
+res.sign <- out["sign.test",]
+results <- c(t = sum(res.t)/m, sign = sum(res.sign) / m)
+
+results
+```
+
+**I'm assuming these are pVals? Neither are below a typical alpha of 0.05, however the sign test is considerably**
+**lower than the t test in this case. I can see how the sign test would not reject a false null assuming it is usually lower than the t test. **
+
+# Problem 4 (Verzani problem 9.31)
+
+*For the `babies` (**UsingR**) data set, the variable `age` contains the
+recorded mom's age and `dage` contains the dad's age for several different cases
+in the sample. Do a significance test of the null hypothesis of equal ages
+against a one-sided alternative that the dads are older in the sampled
+population.*
+
+```{r, error = TRUE}
+
+t.test(babies$age, babies$dage, alternative = "less", paired = FALSE)
+
+```
+**Reject the null, Dads are likely older in this sample**
+
+# Problem 5 (Verzani problem 9.32)
+
+*The data set `normtemp` (**UsingR**) contains body measurements for 130
+healthy, randomly selected individuals from some parent population. The variable
+`temperature` contains normal body temperature data and the variable `gender`
+contains gender information, with male coded as 1 and female as 2. Is the sample
+difference across the two groups statistically significant?*
+
+```{r, error = TRUE}
+male <- normtemp %>%filter(gender == 1)
+female <- normtemp %>%filter(gender == 2)
+t.test(male$temperature, female$temperature)
+```
+**Difference is significant, reject the null**

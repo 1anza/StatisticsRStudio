@@ -1,0 +1,91 @@
+---
+title: "MATH 3070 Lab Project 8"
+author: "Lane Zaugg"
+date: "October 21, 2021"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+
+*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
+
+## Problem 1 (Verzani problem 3.2)
+*For the `michelson` (**MASS**) data set, produce a density plot comparing `Speed` between Experiments 1 and 2.*
+
+```{r, tidy=TRUE, error=TRUE}
+# Load michelson
+library(MASS)
+data(michelson)
+
+#split speed and experiments
+m<-split(michelson$Speed, michelson$Expt)
+
+#pull experiment 1 and 2 as they relate to speed into separate vectors
+speed1<-m$`1`
+speed2<-m$`2`
+
+#create density plot comparing the two
+plot(density(speed1), ylim = c(0, .007), col = "blue")
+lines(density(speed2), lty = 3, col = "red")
+
+
+```
+
+## Problem 2 (Verzani problem 3.4)
+*Three students record the time spent on homework per class. Their data is:*
+
+| Student| 1  | 2  | 3  | 4  | 5 |
+|:-------|---:|---:|---:|---:|--:|
+| Marsha | 25 | 0  | 45 | 90 | 0 |
+| Bill   | 30 | 30 | 30 | 30 |   |
+| Holly  | 15 | 0  | 90 | 0  |   |
+
+*Use a list to store these values. Then create a boxplot to compare. (You must use `boxplot()`'s formula interface for this problem.)*
+
+```{r, tidy=TRUE, error=TRUE}
+##first vector in list is marsha score, then bill score, and so on
+dF<-stack(list(Marsha = c(25,0,45,90,0), Bill = c(30,30,30,30), Holly = c(15,0,90,0)))
+
+#Create box plot of students scores
+boxplot(dF$values~dF$ind)
+
+
+```
+
+## Problem 3 (Verzani problem 3.5)
+*A group of nursing students take turns measuring some basic assessments. Their data is:*
+
+|          | Temp | Pulse | Systolic | Diastolic |
+|----------|------|-------|----------|-----------|
+| Jackie   | 98.2 | 96    |  134     | 90        |
+| Florence | 98.6 | 56    |  120     | 80        |
+| Mildred  | 98.2 | 76    |  150     | 95        |
+
+*Create a data frame of these values. Will `plot()` and `boxplot()` produce the same graphic?*
+
+```{r, tidy=TRUE, error=TRUE}
+# Create all fields
+students <- c("Jackie", "Florence", "Mildred")
+temp <- c(98.2, 98.6, 98.2)
+pulse <- c(96, 56, 76)
+systolic <- c(134, 120, 150)
+diastolic <- c(90, 80, 85)
+
+# Create the dataframe
+nurseGroup <- data.frame(students, temp, pulse, systolic, diastolic)
+
+#No, plot and boxplot don't produce the same graphic
+```
+
+## Problem 4 (Verzani problem 3.8)
+*The second argument to `split` can be a list of factors. The result is that all interactions (possible combinations) are used for the groups. In the `ToothGrowth` data set, growth (`len`) is measured for two types of supplements (`supp`) and three doses (`dose`). Split this `len` value into 6 groups.*
+
+```{r, tidy=TRUE, error=TRUE}
+# Import ToothGrowth
+data("ToothGrowth")
+
+#split to 6 groups
+TGrow <- split(ToothGrowth$len, c(ToothGrowth$supp, ToothGrowth$dose))
+```

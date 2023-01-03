@@ -1,0 +1,64 @@
+---
+title: "MATH 3070 Lab Project 6"
+author: "Lane Zaugg"
+date: "October 6, 2021"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(GGally)
+library(UsingR)
+```
+``` {r, echo=FALSE, out.width = "75%", fig.align = 'center', fig.cap = "Python Officially Superior to R"}
+knitr::include_graphics("C:/Users/Mac/Downloads/pythonBetterThanR.png")
+```
+
+$$\sum\sqrt{\infty + \infty}$$
+
+*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
+
+# Problem 1 (Verzani problem 5.1)
+*For the `UScereal` (**MASS**) data set, create a scatter plot of `calories` modeled by `sugars` using the `shelf` variable to create different plot characters. Add a legend to indicate the shelf number. Is there any patterns? (Use base R plotting for this problem.)*
+
+## Solution One
+```{r, tidy=TRUE, error=TRUE}
+library(MASS)
+plot(calories ~ sugars, data = UScereal, pch = shelf)
+legend(0, 400, c(1, 2, 3), pch = c(1, 2, 3), cex = 0.9)
+```
+
+# Problem 2 (Verzani problem 5.3)
+*For the data set `UScereal` (**MASS**) make a pairs plot of the numeric variables. Which correlation looks larger: fat and calories or fat and sugars?*
+
+## Solution Two
+```{r, tidy=TRUE, error=TRUE}
+# Plot relevant data using pairs
+relevantData <- UScereal %>% subset(select = c("fat", "sugars", "calories"))
+
+pairs(relevantData, col = UScereal$mfr)
+```
+Fat and calories seem to be more *interwoven*, hence the *higher* correlation
+
+
+
+[**A link to the greatest cereal on the planet!**](https://www.cinnamontoastcrunch.com/product/cinnamon-toast-crunch/)
+
+
+# Problem 3 (Verzani problem 5.4)
+*For the data set `batting` (**UsingR**) make a bubble plot of home runs hit (`HR`) modeled by hits (`H`) where the scale factor for each point is given by `sqrt(SO)/10`. Is there any story to be told by the size of the points? (You must use base R plotting for this problem.)*
+
+## Solution Three
+```{r, tidy=TRUE, error=TRUE}
+# Bubble plot
+blot <- ggplot(batting, aes(x = HR, y = H, size = sqrt(SO)/10)) +
+        geom_point(alpha = 0.5)
+
+blot
+```
+As the number of *hits* increase, so does the number of *home runs*.
+

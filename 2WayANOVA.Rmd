@@ -1,0 +1,125 @@
+---
+title: "MATH 3080 Lab Project 8"
+author: "Lane Zaugg"
+date: "03/24/2022"
+output:
+  pdf_document:
+    toc: TRUE
+---
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(GGally)
+library(OOmisc)
+library(MASS)
+library(UsingR)
+library(ggpubr)
+library(rstatix)
+library(tolerance)
+```
+
+
+# Problem 1 (Verzani problem 12.28)
+
+*In the data set `mtcars` the variables `mpg`, `cyl`, and `am` indicate the
+miles per gallon, the number of cylinders, and the type of transmission,
+respectively. Perform a two-way ANOVA modeling `mpg` by the `cyl` and `am`, each
+treated as a categorical variable.*
+
+*Is there an indication of an interaction? Do both the number of cylinders and
+the type of transmission make a difference?*
+
+```{r, error = TRUE}
+
+head(mtcars)
+with(mtcars, interaction.plot(mpg, cyl, am))
+
+carlcyl <- lm(mpg~as.factor(cyl), data = mtcars)
+carlam <- lm(mpg~as.factor(am), data = mtcars)
+carlcylam <- lm(mpg~am*as.factor(cyl), data = mtcars)
+
+anova(carlam, carlcyl)
+anova(carlcyl, carlcylam)
+anova(carlam, carlcylam)
+```
+*These tests imply that there is no indication that transmission affects mpg in this dataset*
+*Cylinders on the other hand do seem to have an affect on mpg*
+
+# Problem 2 (Verzani problem 12.29)
+
+*The data set `ToothGrowth` has measurements of tooth growth (`len`) of guinea
+pigs for different dosages of Vitamin C (`dose`) and two different delivery
+methods (`supp`).*
+
+*Perform a two-way analysis of variance of tooth growth modeled by dosage and
+delivery method. First, fit the full model including interactions and use the
+$F$-test to compare this with the additive model.*
+
+```{r, error = TRUE}
+with(ToothGrowth, interaction.plot(dose, supp, len))
+
+addit <- lm(len~supp+as.factor(dose), data = ToothGrowth)
+inter <- lm(len~supp*as.factor(dose), data = ToothGrowth)
+
+anova(addit, inter) #interaction has an effect
+
+```
+
+# Problem 3 (Verzani problem 12.30)
+
+*The data set `OrchardSprays` contains measurements on the effectiveness of
+various sprays on repelling honeybees. The variable `decrease` measures
+effectiveness of the spray, `treatment` records the type of treatment, and
+`rowpos` records the row in the field the measurement comes from.*
+
+*Make an interaction plot of the mean of `decrease` with `treatment` as a trace
+factor. Then fit the additive analysis-of-variance model and the model with
+interaction. Compare the two models using `anova`. Is the interaction model
+suggested by the results of the modeling?*
+
+```{r, error = TRUE}
+with(OrchardSprays, interaction.plot(rowpos, treatment, decrease))
+interaction.plot()
+
+additive <- lm(decrease~rowpos+treatment, data = OrchardSprays)
+interaction <- lm(decrease~rowpos*treatment, data = OrchardSprays)
+
+anova(additive, interaction)
+#Giving odd NaN result, solution seems correct, so can't figure out why that is the case...
+#Figured it out, apparently don't want them as.factor? Quirks!
+
+```
+
+# Problem 4 (Verzani problem 12.31)
+
+*What does R output when there is not enough data to estimate the parameters and
+an error term? We check with a simple example. In checking a comment that
+everything is better with butter on it, a student asks four people to rate the
+four combinations of bread and corn with and without butter. The data collected
+is:*
+
+```{r}
+d <- data.frame(
+  rating = c(8, 6, 8, 4),
+  food = gl(2, 2, 4, labels = c("bread", "corn")),
+  butter = gl(2, 1, 4, labels = c("yes", "no"))
+)
+xtabs(rating ~ butter + food, d)
+with(d, interaction.plot(butter, food, rating))
+```
+
+*Look at the summary of the multiplicative model*
+
+```{r}
+summary(lm(rating ~ butter * food, d))
+```
+
+*Do the coefficients get estimated? What is the issue then?*
+
+**YOUR COMMENTS HERE**
+
+*Not enough data to populate a workable result with this amount of observations*
+*It doesn't look like the lines really intersect on the graph either, apart from sharing 8*
+*When there's not enough data to work with, the algorithm will populate null since there is a perfect*
+*fit, resulting in no errors or a 0*

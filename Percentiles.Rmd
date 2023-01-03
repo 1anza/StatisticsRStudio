@@ -1,0 +1,191 @@
+---
+title: "MATH 3070 Lab Project 4"
+author: "Lane Zaugg"
+date: "September 16, 2021"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+4
+*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
+
+## Problem 1 (Verzani problem 2.43)
+*The `time` variable in the `nym.2002` data set (**UsingR**) contains the time to finish the 2002 New York City Marathon for a random sample of the finishers.*
+
+1. *What percent ran the race in under 3 hours? (note that the data is in minutes)*
+
+```{r}
+library(UsingR)
+#your code here
+data(nym.2002)
+
+#assign all time values in nym.2002 to a vector
+vec1<- (nym.2002$time)
+
+#sort out all vector values greater than 180 (3 hours)
+perc<- which(vec1 < 180)
+
+#divide the number of values less than 180 by the total number of entries in the race (1000)
+#multiply by 100 to get percentage result (2.6% in this case)
+(length(perc)/1000) * 100
+```
+
+2. *What is the time cutoff for the top 10%? The top 25%?*
+
+```{r}
+# Notice that these are the 90th and 75th percentiles, respectively
+# Your code here
+vec2<- (nym.2002$time)
+
+#find the 10th and 25th percentiles using quantile function to display those above the top 10% and top 25%
+quantile(vec2, probs = c(.1, .25))
+
+```
+
+3. *What time cuts off the bottom 10%?*
+
+```{r}
+# Your code here
+# find the 90th percentile, this will display the time, the greater of which are in the bottom 10%.
+quantile(vec2, probs = .9)
+```
+
+## Problem 2 (Verzani problem 4.1)
+*The data set `UScereal` (**MASS**) contains data on cereals sold in the United States in 1993. For this data set, answer the following questions using R (i.e. MUST answer questions using a code. Do not count by hand):*
+
+1. *How many rows does the data frame have? Columns?*
+
+```{r}
+# Your code here
+data(UScereal)
+
+# assign UScereal to a matrix data type
+df1<- data.frame(UScereal)
+
+# function to find number of rows this data frame has
+nrow(df1)
+
+# function to find number of columns in the data frame
+ncol(df1)
+
+```
+
+2. *How many different manufacturers are included?*
+
+```{r}
+# Your code here
+
+?UScereal
+
+# Assign mfr to vec3
+vec3<- (UScereal$mfr)
+
+# Remove duplicate mfr references in vec3
+vec3_uninque<- unique(vec3)
+
+# Length of vec3_unique gives us total unique mfrs
+length(vec3_uninque)
+
+```
+
+3. *How many vitamin categories are included?*
+
+```{r}
+# Your code here
+vec4<- (UScereal$vitamins)
+
+#remove duplicates
+vec4_unique <- unique(vec4)
+
+#total of unique categories
+length(vec4_unique)
+
+```
+
+4. *How many cereals have a sugar level above 10?*
+
+```{r}
+# Your code here
+vec5<-(UScereal$sugars)
+
+#filter out sugars below 10
+filtered<- which(vec5 > 10)
+
+#number of cereals above 10 sugar (too many!)
+length(filtered)
+```
+
+5. *What is the mean calorie value for cereals with more than 5 grams of fat? Less than or equal to 5?*
+
+```{r}
+# Your code here
+vec6<-(UScereal$fat)
+
+#filter to greater than 5 fat
+bigfat_filtered<- which(vec6 > 5)
+#filter less than or equal to 5 fat
+littlefat_filtered<-which(vec6 <= 5)
+
+#get indexes 18 and 32 where fat is greater than 5
+bigfat_filtered
+
+#get all other indexes where fat is less or eq to 5
+littlefat_filtered
+
+cal_vec<-(UScereal$calories)
+
+#use index of cal_vec to find mean of calories greater than 5
+mean(c(cal_vec[18], cal_vec[32]))
+
+#remove greater than 5 from vector
+indices <- c(18,32)
+lessthan<- cal_vec[-indices]
+
+#mean of less than or equal to 5
+mean(lessthan)
+
+
+```
+
+6. *What is the mean calorie value for cereals on the middle shelf (2)?*
+
+```{r}
+# Your code here
+
+#get index of shelf 2 to shelfv vector
+shelfv<- which(UScereal$shelf == 2)
+
+#calorie vector
+cal_vec<-(UScereal$calories)
+
+#get only shelf 2 indexes for mean function
+indices <- c(shelfv)
+lessthan<- cal_vec[+indices]
+
+#find mean of calorie value on middle shelf
+mean(lessthan)
+
+```
+
+## Problem 3
+*Create a data frame containing the data in the following table:*
+
+| First    | Last      | Age |
+|----------|-----------|-----|
+| Marcus   | Holstein  | 23  |
+| Samuel   | Adams     | 56  |
+| Gus      | McPherson | 43  |
+| Margaret | Olsen     | 41  |
+| Zim      | Newbold   | 95  |
+
+```{r}
+# Your code here
+
+#inputing into dataframe
+datframe<-data.frame(First = c("Marcus","Samuel","Gus", "Margaret", "Zim"), Last = c("Holstein","Adams","McPherson", "Olsen", "Newbold"), Age = c(23,56,43,41,95))
+
+datframe
+
+```

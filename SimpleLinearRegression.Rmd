@@ -1,0 +1,151 @@
+---
+title: "MATH 3080 Lab Project 5"
+author: "Lane Zaugg"
+date: "02/10/2022"
+output:
+  pdf_document:
+    toc: TRUE
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+library(GGally)
+library(OOmisc)
+library(MASS)
+library(UsingR)
+library(ggpubr)
+library(rstatix)
+library(tolerance)
+```
+
+# Problem 1 (Verzani problem 11.1)
+
+*For the `Cars93` (**MASS**) data set, answer the following:*
+
+1. *For `MPG.highway` modeled by `Horsepower`, find the simple regression
+   coefficients. What is the predicted mileage for a car with 225 horsepower?*
+
+```{r, error = TRUE}
+model <- lm(MPG.highway~Horsepower, data = Cars93)
+predict(model, data.frame(Horsepower = c(225)))
+```
+*Predicted mileage looks to be about 23.9mpg with a 225 horsepower*
+
+
+2. *Fit the linear model with `MPG.highway` modeled by `Weight`. Find the
+   predicted highway mileage of a 6,400 pound HUMMER H2 and a 2,524 pound MINI
+   Cooper.*
+
+```{r, error = TRUE}
+model2 <- lm(MPG.highway~Weight, data = Cars93)
+hummer <- predict(model2, data.frame(Weight = c(6400)))
+mini <- predict(model2, data.frame(Weight = c(2524)))
+
+hummer
+mini
+```
+
+3. *Fit the linear model `Max.Price` modeled by `Min.Price`. Why might you
+   expect the slope to be around 1?*
+
+```{r, error = TRUE}
+price <- lm(Max.Price~Min.Price, data = Cars93)
+plot(Max.Price~Min.Price, data = Cars93, pch = 20, col = Price)
+abline(price)
+```
+*I'd assume the slope is around 1 because it is linear?*
+
+
+**BONUS**: *Can you think of any other linear relationships among the
+variables?*
+
+*Instead of price, couldn't you still get a linear model between the relationship of weight and mpg for each car?*
+
+# Problem 2 (Verzani problem 11.2)
+
+*For the data set `MLBattend` (**UsingR**) concerning Major League Baseball
+attendance, fit a linear model of `attendance` modeled by `wins`. What is the
+predicted increase in attendance if a team that won 80 games last year wins 90
+this year?*
+
+```{r, error = TRUE}
+wins <- lm(attendance~wins, data = MLBattend)
+predict(wins, data.frame(wins = c(90)))
+```
+*Attendance would be around 2,082,903*
+
+
+# Problem 3 (Verzani problem 11.3)
+
+*People often predict children's future height by using their 2-year-old height.
+A common rule is to double the height. The table contains data for eight
+people's heights as 2-year-olds and as adults. Using the data, what is the
+predicted adult height for a 2-year-old who is 33 inches tall?*
+
+Group       |    |    |    |    |    |    |    |    |
+------------|----|----|----|----|----|----|----|----|
+Age 2 (in.) | 39 | 30 | 32 | 34 | 35 | 36 | 36 | 30 |
+Adult (in.) | 71 | 63 | 63 | 67 | 68 | 68 | 70 | 64 |
+
+```{r, error = TRUE}
+adultHeight <- c(71, 63, 63, 67, 68, 68, 70, 64)
+df <- data.frame(ageHeight = c(39, 30, 32, 34, 35, 36, 36, 30), adultHeight)
+
+heightGuess <- lm(adultHeight~ageHeight, data = df)
+predict(heightGuess, data.frame(ageHeight = c(33)))
+```
+*Just under 66 inches*
+
+
+# Problem 4 (Verzani problem 11.4)
+
+*The `galton` (**UsingR**) data set contains data collected by Francis Galton in
+1885 concerning the influence a parent's height has on a child's height. Fit a
+linear model for a child's height modeled by his parent's height. Make a
+scatterplot with a regression line. (Is this data set a good candidate for using
+`jitter()`?) What is the value of $\hat{\beta}_1$, and why is this of interest?*
+
+```{r, error = TRUE}
+glt <- lm(child~parent, data = galton)
+jitterChild <- jitter(galton$child)
+plot(jitterChild~parent, data = galton, pch = 20, col = parent)
+
+```
+*Would be a good candidate for jitter, though its not spaced out as much as I'd like*
+
+# Problem 5 (Verzani problem 11.5)
+
+*The formulas*
+
+$$\hat{\beta}_1 = \frac{\sum_{i = 1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i =
+1}^n (x_i - \bar{x})^2},$$
+
+$$\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x},$$
+
+*and the prediction line equation can be rewritten in terms of the correlation
+coefficient, $r$, as*
+
+$$\frac{\hat{y}_i - \bar{y}}{s_y} = r \frac{x_i - \bar{x}}{s_x}.$$
+
+*Thus the five summary numbers: the two means, the standard deviations, and the
+correlation coefficient are fundamental for regression analysis.*
+
+*This is interpreted as follows. Scaled differences of $\hat{y}_i$ from the mean
+$\bar{y}$ are less than the scaled differences of $x_i$ from $\bar{x}$, as
+$\left|r\right| \le 1$. That is, "regression" toward the mean, as unusually
+large differences from the mean are lessened in their prediction for $y$.*
+
+*For the data set `galton` (**UsingR**) use `scale()` on the variables `parent`
+and `child`, and then model the height of the child by the height of the parent.
+What are the estimates for $r$ and $\beta_1$.*
+
+```{r, error = TRUE}
+child <- galton$child
+parent <- galton$parent
+
+scaledGalton <- lm(scale(child)~scale(parent))
+scaledGalton
+
+cor(galton)
+```
+*45.8% correlation*

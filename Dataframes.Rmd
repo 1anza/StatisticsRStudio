@@ -1,0 +1,97 @@
+---
+title: "MATH 3070 Lab Project 5"
+author: "Lane Zaugg"
+date: "September 28, 2021"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+
+*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
+
+
+## Problem 1 (Verzani problem 4.7)
+*Use the `subset()` function to return a data frame made from the `Cars93` (**MASS**) data frame consisting only of `non-USA` cars in origin, with 4 cylinders and a maximum price of \$15,000 or less.*
+
+```{r, tidy=TRUE,error=TRUE}
+# Import MASS and look at dataframe of Cars93
+library(MASS)
+data.frame(Cars93)
+
+# Create subset of Cars93 dataframe that contains the specifics we want
+noUsaDataF <- subset(Cars93, Cylinders == 4 & Origin == "non-USA" & Max.Price < 15)
+
+# Print specific data.frame with the sought after results.
+data.frame(noUsaDataF)
+
+```
+
+## Problem 2 (Verzani problem 4.10)
+*Find the standard deviation of each variable in the `mtcars` data set.*
+
+```{r, tidy=TRUE, error=TRUE}
+# Looking at dataframe of mtcars
+data.frame(mtcars)
+
+# Calculating the standard deviation of each column
+# of mtcars. (Columns are isolated using the '2')
+apply(mtcars, 2, sd)
+
+```
+
+## Problem 3 (Verzani problem 4.11)
+*Find the standard deviation for each numeric variable in `Cars93` (**MASS**).*
+
+```{r, tidy=TRUE, error=TRUE}
+# Looking at Cars93 again
+data.frame(Cars93)
+
+# Calculating the standard deviation of each column
+# of mtcars. (Columns are isolated using the '2')
+# Any non-numeric column values are represented with an "NA"
+apply(Cars93, 2, sd)
+
+```
+
+## Problem 4
+*You can find data describing various statistics on 2012 Olympic participating nations such as population and medal counts in the comma-separated value file (olympic-medals2012.csv). Load this dataset into R in a data frame and do the following:*
+
+1. *Create a new data frame containing only the country's ISO code (a three-letter code for the country; USA is the United States of America, and DZA Algeria), name, population, and counts for gold, silver, and bronze. This data frame should be called `olympic2012`.*
+
+```{r, tidy=TRUE, error=TRUE}
+# Import CSV
+medals <- read.csv("C:\\Users\\Mac\\Downloads\\olympic-medals2012.csv", header=TRUE, stringsAsFactors=FALSE)
+
+# Look at medals dataframe
+data.frame(medals)
+
+# Isolating ISO, name, pop, and medal count to olympic2012
+# by calling specific column numbers
+dim(medals)
+olympic2012 <- (medals[, c(1,3,4,10,11,12), ])
+
+#print
+data.frame(olympic2012)
+```
+
+2. *What proportion of countries earned no medals? Answer this using `olympic2012`.*
+
+```{r, tidy=TRUE, error=TRUE}
+# subset
+subolympic2012 <- subset(olympic2012, Gold == 0 & Silver == 0 & Bronze == 0)
+
+# print
+data.frame(subolympic2012)
+
+# look at number of rows to find number of countries that earned nothing (119)
+dim(subolympic2012)
+
+# divide 119 by total number of participants (204) in olympic2012
+dim(olympic2012)
+
+# 58.3%
+119/204
+```
+

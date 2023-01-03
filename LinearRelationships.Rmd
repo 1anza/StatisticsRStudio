@@ -1,0 +1,86 @@
+---
+title: "MATH 3070 Lab Project 9"
+author: "Lane Zaugg"
+date: "November 3, 2021"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+
+*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
+
+## Problem 1 (Verzani problem 3.17)
+*The `state.x77` data set contains various information for each of the fifty United States. We wish to explore possible relationships among the variables. First, we make the data set easier to work with by turning it into a data frame.*
+
+```{r}
+x77 <- data.frame(state.x77)
+```
+
+*Now, make scatter plots of `Population` and `Frost`; `Population` and `Murder`; `Population` and `Area`; and `Income` and `HS.Grad`. Do any relationships appear linear? Are there any surprising correlations?*
+
+```{r, tidy=TRUE}
+# Create plots of each pair
+x1 <- plot(Population ~ Frost, data = x77, col = "blue")
+x2 <- plot(Population ~ Murder, data = x77, col = "red")
+x3 <- plot(Population ~ Area, data = x77, col = "orange")
+x4 <- plot(Income ~ HS.Grad, data = x77, col = "purple")
+
+# Look at correlations
+cor(x77$Population, x77$Frost)
+cor(x77$Population, x77$Murder)
+cor(x77$Population, x77$Area)
+cor(x77$Income, x77$HS.Grad)
+
+# I don't see any linear relationships, but smaller areas can have larger populations.
+```
+
+## Problem 2 (Verzani problem 3.20)
+*The `batting` (**UsingR**) data set contains baseball statistics for the 2002 Major League Baseball season. What is the correlation between the number of strikeouts (`SO`) and the number of home runs (`HR`)? Make a scatter plot to see whether there is any trend. Does the data suggest that in order to hit a lot of home runs one should strike out a lot?*
+
+```{r, tidy=TRUE}
+# Import UsingR
+library(UsingR)
+
+# Look at correlation
+cor(batting$SO, batting$HR)
+
+# View scatterplot -> it does appear that those with more home runs have 
+# a high amount of strikeouts as well, however this could be a factor of 
+# career length or a number of other things not exclusive to HR and SO.
+tline <- lm(SO ~ HR, batting)
+coefficients(tline)
+
+plot(SO ~ HR, data = batting)
+abline(tline)
+
+```
+
+## Problem 3 (Verzani problem 3.32)
+*The data set `UScereal` (**MASS**) contains information about cereals on a shelf of a United States grocery store. Make a table showing the relationship between manufacturer, `mfr`, and shelf placement, `shelf`. Are there any obvious differences between manufacturers?*
+
+```{r, tidy=TRUE}
+# Import MASS
+library(MASS)
+
+#create and view table
+tab1 <- xtabs(~mfr + shelf, data = UScereal)
+tab1
+
+#nothing painfully obvious, however it does appear most keep the bulk of 
+#their product on shelf 3, whereas 'R' is the only one that keeps the bulk
+#on shelf 1, and 'Q' does the same for shelf 2.
+```
+
+## Problem 4 (Verzani problem 3.33)
+*The help page for `mosaicplot()` demonstrates the data set `HairEyeColor`, which records `sex`, `Hair` color, and `Eye` color for 592 statistics students. The data set comes as a flattened table, so simply passing the object to `mosaicplot()` will create the plot. (Or, as demonstrated, passing `shade = TRUE`, as in `mosaicplot(HairEyeColor, shade = TRUE)`, will produce a colored version.)*
+*Make the plot. Why does the help page note, "there are more blue-eyed, blonde females than expected?"*
+
+```{r, tidy=TRUE}
+# Look at mosaicplot
+mosaicplot(HairEyeColor)
+
+#Because there is a much larger box for blue-eyed females relative to any
+#other box
+```

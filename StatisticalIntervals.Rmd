@@ -1,0 +1,157 @@
+---
+title: "MATH 3080 Lab Project 4"
+author: "Lane Zaugg"
+date: "02/09/2022"
+output:
+  pdf_document:
+    toc: TRUE
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+library(GGally)
+library(OOmisc)
+library(MASS)
+library(UsingR)
+library(ggpubr)
+library(rstatix)
+library(tolerance)
+pi_norm <- function(x, conf.level = 0.95, alternative = "two.sided") {
+  alpha <- 1 - conf.level
+  n <- length(x)
+  xbar <- mean(x)
+  err <- sd(x) * sqrt(1 + 1 / n)
+  crit <- switch(alternative,
+                 "two.sided" = qt(alpha / 2, df = n - 1, lower.tail = FALSE),
+                 "less" = -qt(alpha, df = n - 1, lower.tail = FALSE),
+                 "greater" = qt(alpha, df = n - 1, lower.tail = FALSE),
+                 # Below is the "default" switch, triggered if none of the above
+                 stop("alternative must be one of two.sided, less, greater"))
+  interval <- switch(alternative,
+                     "two.sided" = c(xbar - crit * err, xbar + crit * err),
+                     "less" = c(xbar + crit * err, Inf),
+                     "greater" = c(-Inf, xbar + crit * err),
+                     stop("How did I get here?"))
+  attr(interval, "conf.level") <- conf.level
+  interval
+}
+no_param_pi <- function(x, conf.level = 0.95) {
+  n <- length(x)
+  x <- sort(x)
+  j <- max(floor((n + 1) * (1 - conf.level) / 2), 1)
+  conf.level <- (n + 1 - 2 * j)/(n + 1)
+  interval <- c(x[j], x[n + 1 - j])
+  attr(interval, "conf.level") <- conf.level
+  interval
+}
+repint <- function(x, m = length(x), conf.level = 0.95,
+                   alternative = "two.sided") {
+  alpha <- 1 - conf.level
+  n <- length(x)
+  xbar <- mean(x)
+  err <- sd(x) * sqrt(1 / m + 1 / n)
+  crit <- switch(alternative,
+                 "two.sided" = qt(alpha / 2, df = n - 1, lower.tail = FALSE),
+                 "less" = -qt(alpha, df = n - 1, lower.tail = FALSE),
+                 "greater" = qt(alpha, df = n - 1, lower.tail = FALSE),
+                 # Below is the "default" switch, triggered if none of the above
+                 stop("alternative must be one of two.sided, less, greater"))
+  interval <- switch(alternative,
+                     "two.sided" = c(xbar - crit * err, xbar + crit * err),
+                     "less" = c(xbar + crit * err, Inf),
+                     "greater" = c(-Inf, xbar + crit * err),
+                     stop("How did I get here?"))
+  attr(interval, "conf.level") <- conf.level
+  interval
+}
+
+```
+
+
+
+# Problem 1
+
+*The `cats` data set (**MASS**) contains the heart and body weight of a sample
+of male and female cats. Use the data set to estimate a 95% prediction interval
+for the body weight of a male cat. Assume that the body weight of cats is
+Normally distributed.*
+
+```{r, error = TRUE}
+model <- lm(Sex == "M" ~ Bwt, data = cats)
+ggqqplot(residuals(model))
+shapiro_test(residuals(model))
+
+
+maleCats <- subset(cats, subset = Sex =="M")
+maleCats_Bwt <- maleCats$Bwt
+pi_norm(maleCats_Bwt, conf.level = 0.95)
+
+```
+
+# Problem 2
+
+*The data set `SP500` (**MASS**) contains the returns of the S&P 500 stock index
+for the 1990s; that is, it's the ratio of the change of the index's price
+divided by the preceding day price. In principle, when predicting the direction
+of the stock market with the intention of buying stock, we are willing to be
+wrong in one direction but not another; we are okay with predicting the market
+grows too little and be pleasantly surprised than to predict the market grows
+more than it actually does. So compute a 99% lower prediction bound, assuming
+that stock returns are Normally distributed. (You should not trust this number.
+First the Normality assumption, despite being assumed a lot in finance, is not
+true. Second, stock returns are* not *an independent and identically distributed
+sample.)*
+
+```{r, error = TRUE}
+pi_norm(SP500, conf.level = 0.99, alternative = "less")
+```
+
+# Problem 3
+
+*The data set `abbey` (**MASS**) contains determinations of nickel content (ppm)
+in a Canadian syenite rock. The assumption of a Normal distribution clearly is
+inappropriate for this data set. Construct a 90% prediction interval for the
+next measurement from the data set. Use a nonparametric procedure.*
+
+```{r, error = TRUE}
+no_param_pi(abbey, conf.level = .9)
+```
+
+# Problem 4
+
+*Use the data from Problem 1 to construct a 95% tolerance interval for 99% of
+cats' body weight.*
+
+```{r, error = TRUE}
+normtol.int(maleCats_Bwt, alpha = 0.1, P = .95, side = 1)
+```
+
+# Problem 5
+
+*The data set `geyser` (**MASS**) contains both wait time between and duration
+of eruptions of the Old Faithful geyser in Yellowstone National Park. Use the
+data set to construct a nonparametric tolerance interval containing 90% of
+geyser eruptions with 99% confidence.*
+
+```{r, error = TRUE}
+nptol.int(geyser$waiting, alpha = 0.1, P = .90, side = 1)
+```
+
+# Problem 6
+
+*The data set `accdeaths` (**MASS**) contains a count of accidental deaths in
+the United States between 1973 and 1978. What was the mean count of accidental
+deaths per month? Use this data set to construct a statistical interval for the
+mean number of accidental deaths over the next five years. (Bonus points if you
+can compare your interval to the observed mean over those years and assess how
+well it did.)*
+
+```{r, error = TRUE}
+# prediction only gives 1 future observation
+# replication gives multiple future observations (multiple data sets over next
+# year) based on central limit theorom, since we asked about the mean. 
+# Total mean, don't necessarily need per for each month.
+x <- (repint(accdeaths))
+mean(x)
+```
+
