@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 9"
-author: "Lane Zaugg"
 date: "November 3, 2021"
 output:
   pdf_document:
@@ -8,9 +6,6 @@ output:
   html_document:
     toc: yes
 ---
-
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
-
 ## Problem 1 (Verzani problem 3.17)
 *The `state.x77` data set contains various information for each of the fifty United States. We wish to explore possible relationships among the variables. First, we make the data set easier to work with by turning it into a data frame.*
 
