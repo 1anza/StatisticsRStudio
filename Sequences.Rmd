@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 2"
-author: "Lane Zaugg"
 date: "September 1, 2021"
 output:
   pdf_document:
@@ -9,7 +7,6 @@ output:
     toc: yes
 ---
 
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
 
 ## Problem 1 (Verzani problem 1.7)
 *The `rivers` (**UsingR**) or any other data set is available after loading the package **UsingR**. Load the package, and inspect the data set. Scan the values to find the largest one.*
