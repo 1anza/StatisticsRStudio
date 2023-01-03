@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 10"
-author: "Lane Zaugg"
 date: "November 10, 2021"
 output:
   pdf_document:
@@ -8,10 +6,6 @@ output:
   html_document:
     toc: yes
 ---
-
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
-
-*Since this assignment involves simulation, I set the seed to the following in order to get the same results:*
 
 ```{r}
 set.seed(5292016)
