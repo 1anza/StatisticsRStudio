@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 3"
-author: "Lane Zaugg"
 date: "September 9, 2021"
 output:
   pdf_document:
@@ -8,8 +6,6 @@ output:
   html_document:
     toc: yes
 ---
-
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
 
 ## Problem 1
 *The `faithful` (Package **datasets** is built in Base R) dataset records the waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park. Find the mean waiting time, median waiting time, longest waiting time and shortest waiting time in minutes.*
