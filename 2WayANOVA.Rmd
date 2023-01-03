@@ -1,6 +1,4 @@
 ---
-title: "MATH 3080 Lab Project 8"
-author: "Lane Zaugg"
 date: "03/24/2022"
 output:
   pdf_document:
