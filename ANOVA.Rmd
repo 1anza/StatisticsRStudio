@@ -1,6 +1,4 @@
 ---
-title: "MATH 3080 Lab Project 3"
-author: "Your Name Here"
 date: "02/02/2022"
 output:
   pdf_document:
