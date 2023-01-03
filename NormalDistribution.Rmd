@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 13"
-author: "Lane Zaugg"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   pdf_document:
@@ -8,9 +6,6 @@ output:
   html_document:
     toc: yes
 ---
-
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
-
 ## Problem 1 (Verzani problem 9.14)
 *The data set `normtemp` (**UsingR**) contains measurements of 130 healthy, randomly selected individuals. The variable `temperature` contains normal body temperature. Does the data appear to come from a Normal distribution? If so, perform a $t$-test to see if the commonly assumed value of 98.6 degrees fahrenheit is correct. (Studies have suggested that 98.2 degrees fahrenheit is more accurate.)*
 
