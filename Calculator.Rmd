@@ -1,12 +1,8 @@
 ---
-title: "MATH 3070 Lab Project 1"
-author: "Lane Zaugg"
 date: "August 26th, 2021"
 output: pdf_document
     
 ---
-
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
 
 ## Problem 1 (Verzani problem 1.1)
 *Use R as you would a calculator to find numeric answers to the following:*
