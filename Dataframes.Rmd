@@ -1,6 +1,4 @@
 ---
-title: "MATH 3070 Lab Project 5"
-author: "Lane Zaugg"
 date: "September 28, 2021"
 output:
   pdf_document:
@@ -9,7 +7,6 @@ output:
     toc: yes
 ---
 
-*Remember: I expect to see commentary either in the text, in the code with comments created using `#`, or (preferably) both! **Failing to do so may result in lost points!***
 
 
 ## Problem 1 (Verzani problem 4.7)
